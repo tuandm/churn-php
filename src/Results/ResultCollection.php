@@ -36,6 +36,11 @@ class ResultCollection extends Collection
             ->take($config->getFilesToShow());
     }
 
+    public function whereScoreAbove($score)
+    {
+        dd($score);
+    }
+
     /**
      * Get the highest number of commits.
      * @return integer

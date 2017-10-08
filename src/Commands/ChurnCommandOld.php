@@ -18,7 +18,7 @@ use Churn\Configuration\Config;
 use Symfony\Component\Yaml\Yaml;
 use InvalidArgumentException;
 
-class ChurnCommand extends Command
+class ChurnCommandOld extends Command
 {
     const FORMAT_JSON = 'json';
     const FORMAT_TEXT = 'text';
@@ -108,9 +108,6 @@ class ChurnCommand extends Command
 
         $this->filesCollection = $this->getPhpFiles($this->getDirectoriesToScan($input));
         $this->filesCount = $this->filesCollection->count();
-
-
-
         $this->runningProcesses = new Collection;
         $this->completedProcessesArray = [];
         while ($this->filesCollection->hasFiles() || $this->runningProcesses->count()) {
@@ -118,13 +115,10 @@ class ChurnCommand extends Command
         }
         $completedProcesses = new Collection($this->completedProcessesArray);
 
-
-
-        $results = $this->resultsParser->parse($completedProcesses);
-        $results = $results->whereScoreAbove($this->config->getMinScoreToShow());
-        dd($results);
-//            ->normalizeAgainst($this->config);
-//        $this->displayResults($input->getOption('format'), $output, $results);
+        $results = $this->resultsParser
+            ->parse($completedProcesses)
+            ->normalizeAgainst($this->config);
+        $this->displayResults($input->getOption('format'), $output, $results);
     }
 
     /**
